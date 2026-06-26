@@ -1,5 +1,4 @@
-# deborna-telegram-tma
-🎲 DeborWin | The ultimate Play-to-Earn Tombola/Bingo mini-app on Telegram. Buy your cards, compete with up to 100 players, and get instant automated payouts!
+
 
 
 # DeborWin 🎲
@@ -9,7 +8,7 @@
 
 ## 🌍 Choose Your Language / انتخاب زبان
 * 🇬🇧 [English (Jump to English Section)](#english-version)
-* 🇮🇷 [فارسی (انتقال به بخش فارسی)](#persian-version)
+* 🇮🇷 [فارسی ](#persian-version)
 
 ---
 
@@ -45,7 +44,7 @@ deborna-telegram-tma/
 ```
 
 ---
-
+<a id="persian-version"></a>
 ## 🇮🇷 نسخه فارسی
 
 پلتفرم **دبروین (DeborWin)** یک مینی‌اپلیکیشن تلگرامی (TMA) پیشرفته و همزمان (Real-time) در سبک بازی‌های کسب درآمد (Play-to-Earn) است. این پروژه با بهره‌گیری از هسته قدرتمند و فوق‌سریع زبان Go، پتانسیل نوستالژیک بازی دبرنا را به یک سیستم رقابتی گروهی همراه با مدیریت مالی کاملاً خودکار و آنی تبدیل کرده است.
