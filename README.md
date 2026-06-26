@@ -7,7 +7,7 @@
 ---
 
 ## 🌍 Choose Your Language / انتخاب زبان
-* 🇬🇧 [English (Jump to English Section)](#english-version)
+* 🇬🇧 [English](#english-version)
 * 🇮🇷 [فارسی ](#persian-version)
 
 ---
