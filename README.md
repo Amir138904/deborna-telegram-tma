@@ -2,7 +2,8 @@
 
 
 # DeborWin 🎲
-> **The Ultimate Play-to-Earn (P2E) Tombola/Bingo Telegram Mini App** > *اولین مینی‌اپلیکیشن درآمدی دبرنای آنلاین در بستر تلگرام*
+> **The Ultimate Play-to-Earn (P2E) Tombola/Bingo Telegram Mini App** >
+> *اولین مینی‌اپلیکیشن درآمدی دبرنای آنلاین در بستر تلگرام*
 
 ---
 
@@ -84,6 +85,3 @@ deborna-telegram-tma/
 
 Developed for [deborna-telegram-tma](https://github.com/ramtin-2024/deborna-telegram-tma) with 🎲 and 💻.
 
-```
-
-```
