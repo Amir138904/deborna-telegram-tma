@@ -103,3 +103,27 @@ func (r *Room) FinishGame() {
 		r.Winner.Balance += net
 	}
 }
+
+
+package rooms
+
+import (
+	"errors"
+	"sync"
+
+	"github.com/amir138904/deborna-telegram-tma/apps/backend-core/internal/models"
+)
+
+type Room struct {
+	mu sync.Mutex
+
+	Players []*models.User
+
+	EntryFee float64
+
+	PlatformFeePercent float64
+
+	ReferralReward float64
+
+	Winner *models.User
+}
