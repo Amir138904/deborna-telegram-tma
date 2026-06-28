@@ -164,3 +164,25 @@ func (r *Room) SetWinner(user *models.User) {
 
 	r.Winner = user
 }
+
+
+
+
+func (r *Room) FinishGame() {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	totalPool := float64(len(r.Players)) * r.EntryFee
+
+	fee := (totalPool * r.PlatformFeePercent) / 100
+	net := totalPool - fee
+
+	if r.Winner != nil {
+		r.Winner.Balance += net
+	}
+
+	// پاک کردن PendingBalance
+	for _, p := range r.Players {
+		p.PendingBalance = 0
+	}
+}
