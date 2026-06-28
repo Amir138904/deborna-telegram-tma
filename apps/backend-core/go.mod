@@ -1,7 +1,6 @@
 module deborna-backend
 
 go 1.26.4
-
 module github.com/amir138904/deborna-telegram-tma/apps/backend-core
 
 go 1.25
