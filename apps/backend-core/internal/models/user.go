@@ -1,3 +1,4 @@
+
 package models
 
 import (
@@ -5,10 +6,6 @@ import (
 
 	"github.com/google/uuid"
 )
-
-/* =========================
-   LANGUAGE
-========================= */
 
 type Language string
 
@@ -22,10 +19,6 @@ const (
 	LangArabic  Language = "ar"
 )
 
-/* =========================
-   ROLE
-========================= */
-
 type UserRole uint8
 
 const (
@@ -34,10 +27,6 @@ const (
 	RoleAdmin
 	RoleOwner
 )
-
-/* =========================
-   STATUS
-========================= */
 
 type UserStatus uint8
 
@@ -48,10 +37,6 @@ const (
 	StatusBanned
 )
 
-/* =========================
-   CARD LEVEL
-========================= */
-
 type CardLevel uint8
 
 const (
@@ -61,69 +46,50 @@ const (
 	Premium
 )
 
-/* =========================
-   STATISTICS
-========================= */
-
 type Statistics struct {
-	TotalGames   uint64  `json:"total_games"`
-	Wins         uint64  `json:"wins"`
-	Losses       uint64  `json:"losses"`
-	TotalPrize   float64 `json:"total_prize"`
-	HighestPrize float64 `json:"highest_prize"`
+	TotalGames   uint64
+	Wins         uint64
+	Losses       uint64
+	TotalPrize   float64
+	HighestPrize float64
 }
-
-/* =========================
-   USER MODEL (UPDATED)
-========================= */
 
 type User struct {
-	ID         string `json:"id" db:"id"`
-	TelegramID int64  `json:"telegram_id" db:"telegram_id"`
+	ID         string
+	TelegramID int64
 
-	Username  string `json:"username" db:"username"`
-	FirstName string `json:"first_name" db:"first_name"`
-	LastName  string `json:"last_name" db:"last_name"`
+	Username  string
+	FirstName string
+	LastName  string
 
-	Language Language `json:"language" db:"language"`
+	Language Language
 
-	Role   UserRole   `json:"role" db:"role"`
-	Status UserStatus `json:"status" db:"status"`
+	Role   UserRole
+	Status UserStatus
 
-	Level CardLevel `json:"level" db:"level"`
+	Level CardLevel
 
-	Balance float64 `json:"balance" db:"balance"`
+	Balance        float64
+	PendingBalance float64 // 💰 پول قفل شده داخل بازی
 
-	WalletAddress string `json:"wallet_address" db:"wallet_address"`
+	WalletAddress string
 
-	Statistics Statistics `json:"statistics" db:"statistics"`
+	Statistics Statistics
 
-	IsPremium bool `json:"is_premium" db:"is_premium"`
-	IsBanned  bool `json:"is_banned" db:"is_banned"`
+	IsPremium bool
+	IsBanned  bool
 
-	/* =========================
-	   NEW (REFERRAL SYSTEM)
-	========================= */
+	ReferredBy    string
+	ReferralCount uint64
 
-	ReferredBy    string `json:"referred_by" db:"referred_by"`
-	ReferralCount uint64 `json:"referral_count" db:"referral_count"`
+	HasPlayedFirstGame bool
 
-	HasPlayedFirstGame bool `json:"has_played_first_game" db:"has_played_first_game"`
-
-	/* =========================
-	   TIME
-	========================= */
-
-	LastLogin time.Time `json:"last_login" db:"last_login"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	LastLogin time.Time
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
-/* =========================
-   CONSTRUCTOR
-========================= */
-
-func NewUser(telegramID int64, username, firstName, lastName string) *User {
+func NewUser(telegramID int64, username, first, last string) *User {
 	now := time.Now()
 
 	return &User{
@@ -131,8 +97,8 @@ func NewUser(telegramID int64, username, firstName, lastName string) *User {
 		TelegramID: telegramID,
 
 		Username:  username,
-		FirstName: firstName,
-		LastName:  lastName,
+		FirstName: first,
+		LastName:  last,
 
 		Language: LangEnglish,
 
@@ -141,7 +107,8 @@ func NewUser(telegramID int64, username, firstName, lastName string) *User {
 
 		Level: Bronze,
 
-		Balance: 0,
+		Balance:        0,
+		PendingBalance:  0,
 
 		Statistics: Statistics{},
 
@@ -156,68 +123,4 @@ func NewUser(telegramID int64, username, firstName, lastName string) *User {
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-}
-
-/* =========================
-   GAME METHODS
-========================= */
-
-func (u *User) Login() {
-	u.Status = StatusOnline
-	u.LastLogin = time.Now()
-	u.UpdatedAt = time.Now()
-}
-
-func (u *User) Logout() {
-	u.Status = StatusOffline
-	u.UpdatedAt = time.Now()
-}
-
-func (u *User) StartGame() {
-	u.Status = StatusPlaying
-
-	if !u.HasPlayedFirstGame {
-		u.HasPlayedFirstGame = true
-	}
-
-	u.UpdatedAt = time.Now()
-}
-
-func (u *User) EndGame(win bool, prize float64) {
-	u.Status = StatusOnline
-
-	u.Statistics.TotalGames++
-
-	if win {
-		u.Statistics.Wins++
-		u.Statistics.TotalPrize += prize
-
-		if prize > u.Statistics.HighestPrize {
-			u.Statistics.HighestPrize = prize
-		}
-	} else {
-		u.Statistics.Losses++
-	}
-
-	u.UpdatedAt = time.Now()
-}
-
-func (u *User) AddBalance(amount float64) {
-	u.Balance += amount
-	u.UpdatedAt = time.Now()
-}
-
-func (u *User) SubtractBalance(amount float64) bool {
-	if u.Balance < amount {
-		return false
-	}
-
-	u.Balance -= amount
-	u.UpdatedAt = time.Now()
-	return true
-}
-
-func (u *User) Promote(level CardLevel) {
-	u.Level = level
-	u.UpdatedAt = time.Now()
 }
