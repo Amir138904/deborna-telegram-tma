@@ -7,7 +7,7 @@ import (
 )
 
 /* =========================
-   LANGUAGE SYSTEM (i18n READY)
+   LANGUAGE
 ========================= */
 
 type Language string
@@ -23,7 +23,7 @@ const (
 )
 
 /* =========================
-   USER ROLE
+   ROLE
 ========================= */
 
 type UserRole uint8
@@ -36,7 +36,7 @@ const (
 )
 
 /* =========================
-   USER STATUS
+   STATUS
 ========================= */
 
 type UserStatus uint8
@@ -49,7 +49,7 @@ const (
 )
 
 /* =========================
-   CARD LEVEL (GAME TIERS)
+   CARD LEVEL
 ========================= */
 
 type CardLevel uint8
@@ -74,12 +74,12 @@ type Statistics struct {
 }
 
 /* =========================
-   MAIN USER MODEL
+   USER MODEL (UPDATED)
 ========================= */
 
 type User struct {
-	ID         string     `json:"id" db:"id"`
-	TelegramID int64      `json:"telegram_id" db:"telegram_id"`
+	ID         string `json:"id" db:"id"`
+	TelegramID int64  `json:"telegram_id" db:"telegram_id"`
 
 	Username  string `json:"username" db:"username"`
 	FirstName string `json:"first_name" db:"first_name"`
@@ -101,9 +101,22 @@ type User struct {
 	IsPremium bool `json:"is_premium" db:"is_premium"`
 	IsBanned  bool `json:"is_banned" db:"is_banned"`
 
+	/* =========================
+	   NEW (REFERRAL SYSTEM)
+	========================= */
+
+	ReferredBy    string `json:"referred_by" db:"referred_by"`
+	ReferralCount uint64 `json:"referral_count" db:"referral_count"`
+
+	HasPlayedFirstGame bool `json:"has_played_first_game" db:"has_played_first_game"`
+
+	/* =========================
+	   TIME
+	========================= */
+
 	LastLogin time.Time `json:"last_login" db:"last_login"`
-	CreatedAt time.Time  `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at" db:"updated_at"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 }
 
 /* =========================
@@ -135,6 +148,10 @@ func NewUser(telegramID int64, username, firstName, lastName string) *User {
 		IsPremium: false,
 		IsBanned:  false,
 
+		ReferredBy:         "",
+		ReferralCount:      0,
+		HasPlayedFirstGame: false,
+
 		LastLogin: now,
 		CreatedAt: now,
 		UpdatedAt: now,
@@ -142,7 +159,7 @@ func NewUser(telegramID int64, username, firstName, lastName string) *User {
 }
 
 /* =========================
-   METHODS
+   GAME METHODS
 ========================= */
 
 func (u *User) Login() {
@@ -158,6 +175,11 @@ func (u *User) Logout() {
 
 func (u *User) StartGame() {
 	u.Status = StatusPlaying
+
+	if !u.HasPlayedFirstGame {
+		u.HasPlayedFirstGame = true
+	}
+
 	u.UpdatedAt = time.Now()
 }
 
