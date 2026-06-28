@@ -127,3 +127,40 @@ type Room struct {
 
 	Winner *models.User
 }
+
+
+func (r *Room) Join(user *models.User) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if user.Balance < r.EntryFee {
+		return errors.New("not enough balance")
+	}
+
+	// 💰 قفل پول
+	user.Balance -= r.EntryFee
+	user.PendingBalance += r.EntryFee
+
+	r.Players = append(r.Players, user)
+
+	return nil
+}
+
+
+func (r *Room) Leave(user *models.User) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if user.PendingBalance >= r.EntryFee {
+		user.PendingBalance -= r.EntryFee
+		user.Balance += r.EntryFee
+	}
+}
+
+
+func (r *Room) SetWinner(user *models.User) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	r.Winner = user
+}
